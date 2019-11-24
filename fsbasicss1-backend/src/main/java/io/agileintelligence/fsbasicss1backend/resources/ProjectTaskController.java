@@ -1,5 +1,6 @@
 package io.agileintelligence.fsbasicss1backend.resources;
 
+import io.agileintelligence.fsbasicss1backend.exceptions.ProjectTaskNotFoundException;
 import io.agileintelligence.fsbasicss1backend.model.ProjectTask;
 import io.agileintelligence.fsbasicss1backend.repository.ProjectTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ public class ProjectTaskController {
 
     @PostMapping
     public ResponseEntity createProjectTask(@RequestBody ProjectTask projectTask){
-
        // return ResponseEntity.created(URI.create("/backlog")).body(projectTaskRepository.save(projectTask));
         return new ResponseEntity(projectTaskRepository.save(projectTask), HttpStatus.CREATED);
     }
@@ -30,6 +30,13 @@ public class ProjectTaskController {
     @GetMapping
     public ResponseEntity findAllProjectTasks(){
         return ResponseEntity.ok(projectTaskRepository.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity findProjectTaskById(@PathVariable Long id){
+        ProjectTask projectTask = projectTaskRepository.findById(id).
+                orElseThrow(()-> new ProjectTaskNotFoundException("Project Task not found"));
+        return ResponseEntity.ok(projectTask);
     }
 
 
