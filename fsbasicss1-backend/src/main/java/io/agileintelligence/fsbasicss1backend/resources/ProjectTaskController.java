@@ -3,6 +3,7 @@ package io.agileintelligence.fsbasicss1backend.resources;
 import io.agileintelligence.fsbasicss1backend.exceptions.ProjectTaskNotFoundException;
 import io.agileintelligence.fsbasicss1backend.model.ProjectTask;
 import io.agileintelligence.fsbasicss1backend.repository.ProjectTaskRepository;
+import io.agileintelligence.fsbasicss1backend.service.ProjectTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,29 +15,27 @@ import java.net.URI;
 @RequestMapping("/backlog")
 public class ProjectTaskController {
 
-    private final ProjectTaskRepository projectTaskRepository;
+    private final ProjectTaskService projectTaskService;
 
     @Autowired
-    public ProjectTaskController(ProjectTaskRepository projectTaskRepository) {
-        this.projectTaskRepository = projectTaskRepository;
+    public ProjectTaskController(ProjectTaskService projectTaskService) {
+        this.projectTaskService = projectTaskService;
     }
 
     @PostMapping
     public ResponseEntity createProjectTask(@RequestBody ProjectTask projectTask){
        // return ResponseEntity.created(URI.create("/backlog")).body(projectTaskRepository.save(projectTask));
-        return new ResponseEntity(projectTaskRepository.save(projectTask), HttpStatus.CREATED);
+        return new ResponseEntity(projectTaskService.save(projectTask), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity findAllProjectTasks(){
-        return ResponseEntity.ok(projectTaskRepository.findAll());
+        return ResponseEntity.ok(projectTaskService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity findProjectTaskById(@PathVariable Long id){
-        ProjectTask projectTask = projectTaskRepository.findById(id).
-                orElseThrow(()-> new ProjectTaskNotFoundException("Project Task not found"));
-        return ResponseEntity.ok(projectTask);
+        return ResponseEntity.ok(projectTaskService.findById(id));
     }
 
 
