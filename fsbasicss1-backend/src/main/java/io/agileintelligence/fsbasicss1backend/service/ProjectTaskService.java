@@ -35,7 +35,15 @@ public class ProjectTaskService {
 
     public ProjectTask update(Long id, ProjectTask projectTask) {
 
-        return null;
+        return projectTaskRepository.findById(id).map(
+                itemInDB -> {
+                    projectTask.setId(itemInDB.getId());
+                    itemInDB = projectTask;
+                    return projectTaskRepository.save(itemInDB);
+                }
+        ).orElseGet(()->{
+            return projectTaskRepository.save(projectTask);
+        });
     }
 
 

@@ -38,6 +38,9 @@ public class ProjectTaskController {
         return ResponseEntity.ok(projectTaskService.findById(id));
     }
 
-
+    @PutMapping("/{id}")
+    public ResponseEntity updatePT(@PathVariable Long id, @RequestBody ProjectTask projectTask){
+        return  ResponseEntity.ok(projectTaskService.update(id, projectTask));
+    }
 
 }
